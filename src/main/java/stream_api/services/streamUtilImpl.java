@@ -10,10 +10,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
@@ -26,16 +23,7 @@ public class streamUtilImpl implements streamUtil {
 
     @Override
     public void sumEmployeesSalariesPerYear(List<EmployeeWithSalaries> employees) {
-        /*Map<String, Integer> empSalaries = employees.stream().to
 
-                .collect(Collectors.toMap(EmployeeWithSalaries::getName,
-                EmployeeWithSalaries::getSalaries.toList()
-
-
-                ,
-                         IntStream.of(emp -> emp.getSalaries()).sum()
-                         Collectors.summingInt(EmployeeWithSalaries::getSalaries).ToList))
-        IntStream.of(employee.getSalaries()).sum();*/
     }
 
     @SneakyThrows
@@ -47,27 +35,25 @@ public class streamUtilImpl implements streamUtil {
 
     @SneakyThrows
     @Override
-    public double getAverageLengthOfWordInFile(Path textFilePath) {
+    public OptionalDouble getAverageLengthOfWordInFile(Path textFilePath) {
         Stream<String> fileLines = Files.lines(textFilePath, Charset.defaultCharset());
         return fileLines.flatMap(line -> Arrays.stream(line.split(" ")))
                 .mapToInt(String::length)
-                .average()
-                .getAsDouble();
+                .average();
     }
 
     @Override
-    public String getEmployeeNamesSeperatedByComma(List<Employee> employees) {
+    public Optional<String> getEmployeeNamesSeperatedByComma(List<Employee> employees) {
         return employees.stream()
                 .map(Employee::getName)
-                .reduce((nameA, nameB) -> nameA + "," + nameB)
-                .get();
+                .reduce((nameA, nameB) -> nameA + "," + nameB);
     }
 
     @Override
     public List<String> getEmployeeListWithUppercasedNameSortedByLength(List<Employee> employees) {
         return employees.stream()
                 .map(Employee::getName)
-                .filter(name -> name == name.toUpperCase(Locale.ROOT))
+                .filter(name -> name.equals(name.toUpperCase(Locale.ROOT)))
                 .sorted((nameA, nameB) -> nameB.length() - nameA.length())
                 .collect(Collectors.toList());
     }
@@ -93,7 +79,7 @@ public class streamUtilImpl implements streamUtil {
                 .collect(Collectors.groupingBy(Employee::getGender,
                         Collectors.summingInt(Employee::getSalary)));
 
-        return map.get(Gender.MALE).intValue() > map.get(Gender.FEMALE).intValue();
+        return map.get(Gender.MALE) > map.get(Gender.FEMALE);
     }
 
     @Override
@@ -109,7 +95,7 @@ public class streamUtilImpl implements streamUtil {
                         Collectors.counting()));
     }
 
-    public Map<String, Map<Category, Long>> listOfCompaniesPerCategory(List<Employee> employees) {
+    public Map<String, Map<Category, Long>> listOfCompaniesProfileByEmployeesCategory(List<Employee> employees) {
         System.out.println("Exercise 12: List of companies per category:");
         return employees.stream()
                 .collect(Collectors.groupingBy(Employee::getCompanyName,

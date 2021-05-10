@@ -1,5 +1,6 @@
 package stream_api.labs;
 
+import jdk.swing.interop.SwingInterOpUtils;
 import org.w3c.dom.ls.LSOutput;
 import stream_api.common.model.Category;
 import stream_api.common.model.Employee;
@@ -31,6 +32,12 @@ public class Main {
                 new Employee(4, "Yakir", Gender.MALE, 11000, "NayaCollage", Category.findBySalary(11000)),
                 new Employee(5, "Ophir", Gender.MALE, 15000, "NayaCollage", Category.findBySalary(15000)));
 
+        List<EmployeeWithSalaries> employeesWithSalaries = Arrays.asList(
+                new EmployeeWithSalaries(1,"Yaron",
+                        new int[] {10000, 10000, 10000,11000, 11000, 11000,13000, 13000, 14000,14000, 15000, 15000}),
+                new EmployeeWithSalaries(1,"Shira",
+                        new int[] {14000, 14000, 15000,16000, 16000, 16000,17000, 17000, 17000,18000, 18000, 19000}));
+
         streamUtil util = new streamUtilImpl();
 
         int sumEmployeesSalary = util.getSumEmployeesSalary(employees);
@@ -39,11 +46,11 @@ public class Main {
         long numberOfWordsInFile = util.getNumberOfWordsInFile(Path.of("C:\\tmp\\BohemianRaphsody.txt"));
         System.out.println("numberOfWordsInFile: " + numberOfWordsInFile);
 
-        double averageLengthOfWordInFile = util.getAverageLengthOfWordInFile(Path.of("C:\\tmp\\BohemianRaphsody.txt"));
-        System.out.println("averageLengthOfWordInFile: " + averageLengthOfWordInFile);
+        OptionalDouble averageLengthOfWordInFile = util.getAverageLengthOfWordInFile(Path.of("C:\\tmp\\BohemianRaphsody.txt"));
+        averageLengthOfWordInFile.ifPresent(avgLength -> System.out.println("averageLengthOfWordInFile: " + avgLength));
 
-        String employeeNamesSeperatedByComma = util.getEmployeeNamesSeperatedByComma(employees);
-        System.out.println("employeeNamesSeperatedByComma: " + employeeNamesSeperatedByComma);
+        Optional<String> employeeNamesSeperatedByComma = util.getEmployeeNamesSeperatedByComma(employees);
+        employeeNamesSeperatedByComma.ifPresent(names -> System.out.println("employeeNamesSeperatedByComma: " + names));
 
         List<String> employeeListWithUppercasedNameSortedByLength = util.getEmployeeListWithUppercasedNameSortedByLength(employees);
         System.out.println("employeeListWithUppercasedNameSortedByLength: " + employeeListWithUppercasedNameSortedByLength);
@@ -63,7 +70,7 @@ public class Main {
         Map<String, List<Employee>> listOfEmployeesPerCompanyName = util.getListOfEmployeesPerCompanyName(employees);
         System.out.println("listOfEmployeesPerCompanyName: " + listOfEmployeesPerCompanyName);
 
-        Map<String, Map<Category, Long>> listOfCompaniesPerCategory = util.listOfCompaniesPerCategory(employees);
-        System.out.println("listOfCompaniesPerCategory: " + listOfCompaniesPerCategory);
+        Map<String, Map<Category, Long>> listOfCompaniesProfileByEmployeesCategory = util.listOfCompaniesProfileByEmployeesCategory(employees);
+        System.out.println("listOfCompaniesProfileByEmployeesCategory: " + listOfCompaniesProfileByEmployeesCategory);
     }
 }
