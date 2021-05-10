@@ -9,7 +9,7 @@ import lombok.*;
 public class Employee {
     private int id;
     private String name;
-    private String gender;
+    private Gender gender;
     private int salary;
     private String companyName;
     private Category category;
